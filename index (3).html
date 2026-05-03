@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muthu Sivakami — PHP Developer for Tamil Nadu Businesses</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#faf7f2;
+  --bg2:#f3ede3;
+  --bg3:#ffffff;
+  --accent:#1a3a6b;
+  --accent2:#c8960c;
+  --gold:#c8960c;
+  --text:#1a1a2e;
+  --muted:#6b6b80;
+  --border:rgba(26,58,107,0.12);
+  --border2:rgba(26,58,107,0.22);
+  --ff-head:'Cormorant Garamond',serif;
+  --ff-body:'Outfit',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--ff-body);background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none}
+
+/* Custom cursor */
+.cursor{width:10px;height:10px;background:var(--accent);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transition:transform 0.15s ease}
+.cursor-ring{width:36px;height:36px;border:1.5px solid rgba(26,58,107,0.45);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transition:all 0.12s ease;transform:translate(-13px,-13px)}
+.cursor.click{transform:scale(2)}
+
+/* Noise overlay */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.6}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.25rem 2.5rem;display:flex;justify-content:space-between;align-items:center;transition:all 0.4s ease}
+nav.scrolled{background:rgba(250,247,242,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 2px 20px rgba(26,58,107,0.08)}
+.logo{font-family:var(--ff-head);font-size:1.5rem;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:0.02em}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{text-decoration:none;color:var(--muted);font-size:0.85rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--accent);transition:width 0.3s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{background:var(--accent)!important;color:#fff!important;padding:0.5rem 1.4rem;border-radius:100px;transition:all 0.3s!important}
+.nav-cta:hover{background:#e55a28!important;transform:scale(1.05)}
+.nav-cta::after{display:none!important}
+.menu-btn{display:none;flex-direction:column;gap:5px;cursor:none;background:none;border:none;padding:4px}
+.menu-btn span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:all 0.3s}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:8rem 2.5rem 4rem}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(80px);animation:float 8s ease-in-out infinite}
+.orb1{width:700px;height:700px;background:radial-gradient(circle,rgba(26,58,107,0.1),transparent 70%);top:-20%;right:-10%;animation-delay:0s}
+.orb2{width:500px;height:500px;background:radial-gradient(circle,rgba(200,150,12,0.12),transparent 70%);bottom:-10%;left:-5%;animation-delay:3s}
+.orb3{width:350px;height:350px;background:radial-gradient(circle,rgba(26,58,107,0.07),transparent 70%);top:40%;left:30%;animation-delay:5s}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+.hero-grid-line{position:absolute;inset:0;background-image:linear-gradient(rgba(26,58,107,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(26,58,107,0.05) 1px,transparent 1px);background-size:60px 60px}
+.hero-content{position:relative;z-index:2;max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(26,58,107,0.08);border:1px solid rgba(26,58,107,0.2);color:var(--accent);font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:0.5rem 1rem;border-radius:100px;margin-bottom:2rem;opacity:0;animation:fadeUp 0.8s ease 0.2s forwards}
+.badge-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4)}50%{box-shadow:0 0 0 6px transparent}}
+.hero h1{font-family:var(--ff-head);font-size:clamp(3rem,6vw,5.5rem);line-height:1;font-weight:700;margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.8s ease 0.4s forwards}
+.h1-line{display:block;overflow:hidden}
+.h1-line em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--muted);font-size:1.1rem;line-height:1.8;margin-bottom:2.5rem;max-width:480px;opacity:0;animation:fadeUp 0.8s ease 0.6s forwards}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.8s ease 0.8s forwards}
+.btn-glow{background:linear-gradient(135deg,var(--accent),#0f2447);color:#fff;padding:0.85rem 2rem;border-radius:100px;text-decoration:none;font-weight:600;font-size:0.9rem;transition:all 0.3s;box-shadow:0 4px 24px rgba(26,58,107,0.25);position:relative;overflow:hidden}
+.btn-glow:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(26,58,107,0.35)}
+.btn-ghost{border:1.5px solid var(--border2);color:var(--accent);padding:0.85rem 2rem;border-radius:100px;text-decoration:none;font-weight:500;font-size:0.9rem;transition:all 0.3s}
+.btn-ghost:hover{border-color:var(--accent);background:rgba(26,58,107,0.06);transform:translateY(-2px)}
+.hero-stats{display:flex;gap:2.5rem;margin-top:3rem;opacity:0;animation:fadeUp 0.8s ease 1s forwards}
+.hstat{text-align:center}
+.hstat-num{font-family:var(--ff-head);font-size:2.5rem;font-weight:700;color:var(--accent)}
+.hstat-label{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-top:0.2rem}
+.hero-right{display:flex;flex-direction:column;gap:1.25rem;opacity:0;animation:fadeUp 0.8s ease 0.5s forwards}
+.hero-img-main{border-radius:16px;overflow:hidden;position:relative;aspect-ratio:4/3}
+.hero-img-main img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease}
+.hero-img-main:hover img{transform:scale(1.04)}
+.hero-img-main::after{content:'ERP Dashboard Live';position:absolute;bottom:1rem;left:1rem;background:rgba(10,10,15,0.8);color:#fff;font-size:0.75rem;padding:0.35rem 0.75rem;border-radius:100px;border:1px solid var(--border2);backdrop-filter:blur(10px)}
+.hero-imgs-row{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.hero-img-sm{border-radius:12px;overflow:hidden;aspect-ratio:16/10;position:relative}
+.hero-img-sm img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease}
+.hero-img-sm:hover img{transform:scale(1.06)}
+.hero-img-sm::after{content:attr(data-label);position:absolute;bottom:0.6rem;left:0.6rem;background:rgba(10,10,15,0.8);color:#fff;font-size:0.65rem;padding:0.25rem 0.6rem;border-radius:100px;border:1px solid var(--border2)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* Section common */
+.section{padding:6rem 2.5rem;position:relative}
+.section-inner{max-width:1200px;margin:0 auto}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.section-label::before{content:'';width:24px;height:1px;background:var(--gold)}
+.section-title{font-family:var(--ff-head);font-size:clamp(2rem,4vw,3.2rem);font-weight:700;line-height:1.1;margin-bottom:1rem}
+.section-sub{color:var(--muted);font-size:1rem;line-height:1.8;max-width:500px;margin-bottom:3rem}
+
+/* ===== WHAT IS A WEBSITE SECTION ===== */
+.website-section{background:linear-gradient(135deg,#0f2447 0%,#1a3a6b 50%,#0a1a3a 100%);color:#fff;padding:6rem 2.5rem;position:relative;overflow:hidden}
+.website-section::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:50px 50px}
+.website-orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none}
+.website-orb1{width:500px;height:500px;background:radial-gradient(circle,rgba(200,150,12,0.15),transparent 70%);top:-20%;right:-10%}
+.website-orb2{width:400px;height:400px;background:radial-gradient(circle,rgba(26,58,107,0.3),transparent 70%);bottom:-10%;left:-5%}
+.website-section .section-label{color:var(--gold)}
+.website-section .section-label::before{background:var(--gold)}
+.website-section .section-title{color:#fff}
+.website-intro{font-size:1.2rem;color:rgba(255,255,255,0.8);line-height:1.9;max-width:700px;margin:0 auto 4rem;text-align:center}
+.website-visual-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-bottom:4rem}
+@media(max-width:900px){.website-visual-grid{grid-template-columns:1fr}}
+.wv-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:2.5rem 2rem;text-align:center;transition:all 0.4s ease;position:relative;overflow:hidden}
+.wv-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,150,12,0.08),transparent);opacity:0;transition:opacity 0.4s}
+.wv-card:hover{border-color:rgba(200,150,12,0.4);transform:translateY(-8px);background:rgba(255,255,255,0.1)}
+.wv-card:hover::before{opacity:1}
+.wv-icon{font-size:3rem;margin-bottom:1.25rem;display:block}
+.wv-card h3{font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:0.75rem;font-family:var(--ff-head)}
+.wv-card p{font-size:0.9rem;color:rgba(255,255,255,0.7);line-height:1.8}
+.website-compare{display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:900px;margin:0 auto}
+@media(max-width:700px){.website-compare{grid-template-columns:1fr}}
+.compare-card{border-radius:20px;padding:2.5rem;position:relative}
+.compare-no{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1)}
+.compare-yes{background:rgba(200,150,12,0.12);border:1px solid rgba(200,150,12,0.35)}
+.compare-label{font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.compare-no .compare-label{color:rgba(255,255,255,0.5)}
+.compare-yes .compare-label{color:var(--gold)}
+.compare-list{list-style:none;display:flex;flex-direction:column;gap:0.85rem}
+.compare-list li{font-size:0.9rem;color:rgba(255,255,255,0.8);display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.compare-list li .ic{font-size:1rem;flex-shrink:0;margin-top:1px}
+.website-cta-row{text-align:center;margin-top:4rem}
+.website-cta-row p{font-size:1.3rem;color:rgba(255,255,255,0.9);margin-bottom:1.5rem;font-family:var(--ff-head)}
+
+/* Services */
+.services-section{background:var(--bg2)}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+@media(max-width:900px){.services-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.services-grid{grid-template-columns:1fr}}
+.svc-card{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;overflow:hidden;transition:all 0.4s ease}
+.svc-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(26,58,107,0.04),transparent);opacity:0;transition:opacity 0.4s}
+.svc-card:hover{border-color:rgba(26,58,107,0.3);transform:translateY(-6px);box-shadow:0 20px 60px rgba(26,58,107,0.12)}
+.svc-card:hover::before{opacity:1}
+.svc-icon-wrap{width:52px;height:52px;border-radius:12px;background:rgba(26,58,107,0.08);border:1px solid rgba(26,58,107,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1.5rem;transition:all 0.3s}
+.svc-card:hover .svc-icon-wrap{background:rgba(26,58,107,0.14);transform:scale(1.1)}
+.svc-card h3{font-size:1rem;font-weight:600;margin-bottom:0.75rem;color:var(--text)}
+.svc-card p{font-size:0.875rem;color:var(--muted);line-height:1.7}
+.svc-price{display:inline-block;margin-top:1.25rem;font-size:0.75rem;font-weight:600;color:var(--accent);background:rgba(26,58,107,0.08);padding:0.3rem 0.8rem;border-radius:100px;border:1px solid rgba(26,58,107,0.18)}
+.svc-glow{position:absolute;bottom:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(200,150,12,0.08),transparent 70%);pointer-events:none}
+
+/* Projects */
+.projects-section{background:var(--bg)}
+.projects-filter{display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:3rem}
+.filter-btn{padding:0.45rem 1.1rem;border-radius:100px;border:1.5px solid var(--border2);background:transparent;color:var(--muted);font-size:0.8rem;font-weight:500;cursor:none;transition:all 0.3s;font-family:var(--ff-body)}
+.filter-btn.active,.filter-btn:hover{background:rgba(26,58,107,0.08);border-color:var(--accent);color:var(--accent)}
+.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+@media(max-width:900px){.projects-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.projects-grid{grid-template-columns:1fr}}
+.proj-card{background:var(--bg3);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.4s ease;position:relative}
+.proj-card:hover{border-color:rgba(26,58,107,0.25);transform:translateY(-8px);box-shadow:0 30px 60px rgba(26,58,107,0.14)}
+.proj-img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;transition:transform 0.6s ease}
+.proj-card:hover .proj-img{transform:scale(1.06)}
+.proj-body{padding:1.5rem}
+.proj-sector{display:inline-flex;align-items:center;gap:5px;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;padding:0.25rem 0.7rem;border-radius:100px;margin-bottom:0.85rem}
+.proj-card h3{font-size:1rem;font-weight:600;margin-bottom:0.6rem;color:var(--text);line-height:1.4}
+.proj-card p{font-size:0.82rem;color:var(--muted);line-height:1.7;margin-bottom:1rem}
+.proj-tags{display:flex;flex-wrap:wrap;gap:0.4rem}
+.ptag{font-size:0.68rem;background:rgba(26,58,107,0.05);border:1px solid rgba(26,58,107,0.12);color:var(--muted);padding:0.2rem 0.55rem;border-radius:4px;font-weight:500}
+.proj-overlay{position:absolute;inset:0;background:rgba(26,58,107,0.82);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s}
+.proj-card:hover .proj-overlay{opacity:1}
+.view-btn{background:#fff;color:var(--accent);padding:0.6rem 1.5rem;border-radius:100px;font-size:0.8rem;font-weight:600;text-decoration:none;transform:translateY(10px);transition:transform 0.3s;border:none}
+.proj-card:hover .view-btn{transform:translateY(0)}
+
+/* Sector colors */
+.s-edu{background:rgba(56,189,248,0.1);color:#38bdf8;border:1px solid rgba(56,189,248,0.2)}
+.s-food{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.2)}
+.s-ngo{background:rgba(52,211,153,0.1);color:#34d399;border:1px solid rgba(52,211,153,0.2)}
+.s-sports{background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.2)}
+.s-billing{background:rgba(255,107,53,0.1);color:var(--accent);border:1px solid rgba(255,107,53,0.2)}
+.s-trust{background:rgba(244,114,182,0.1);color:#f472b6;border:1px solid rgba(244,114,182,0.2)}
+
+/* === COMPACT SKILLS SECTION === */
+.skills-section{background:var(--bg2);padding:4rem 2.5rem}
+.skills-compact-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+@media(max-width:900px){.skills-compact-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.skills-compact-grid{grid-template-columns:1fr}}
+.skill-chip-group{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:1.25rem}
+.skill-chip-title{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin-bottom:0.9rem;display:flex;align-items:center;gap:6px}
+.skill-chip-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.skill-chips{display:flex;flex-wrap:wrap;gap:0.4rem}
+.schip{font-size:0.75rem;background:rgba(26,58,107,0.06);border:1px solid rgba(26,58,107,0.14);color:var(--text);padding:0.3rem 0.7rem;border-radius:6px;font-weight:500;transition:all 0.25s}
+.schip:hover{background:rgba(26,58,107,0.12);border-color:var(--accent);color:var(--accent)}
+.biz-modules{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:1.25rem}
+.biz-modules-title{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:6px}
+.biz-modules-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.biz-pills{display:flex;flex-wrap:wrap;gap:0.5rem}
+.biz-pill{font-size:0.78rem;background:rgba(200,150,12,0.08);border:1.5px solid rgba(200,150,12,0.25);color:var(--accent);padding:0.35rem 0.9rem;border-radius:8px;font-weight:500;transition:all 0.25s}
+.biz-pill:hover{background:rgba(200,150,12,0.15);border-color:var(--gold);color:var(--text)}
+
+/* CTA */
+.cta-section{background:var(--accent);position:relative;overflow:hidden;text-align:center;padding:8rem 2.5rem}
+.cta-orb1{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(200,150,12,0.18),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.cta-inner{position:relative;z-index:2;max-width:700px;margin:0 auto}
+.cta-section .section-title{font-size:clamp(2.5rem,5vw,4.5rem);margin-bottom:1.5rem;color:#fff}
+.cta-section .section-label{color:rgba(255,255,255,0.7)}
+.cta-section .section-label::before{background:rgba(255,255,255,0.5)}
+.cta-section p{color:rgba(255,255,255,0.8);font-size:1.05rem;line-height:1.8;margin-bottom:3rem}
+.cta-btns{display:flex;gap:1.25rem;justify-content:center;flex-wrap:wrap}
+.cta-contact{display:flex;gap:2rem;justify-content:center;margin-top:2.5rem;flex-wrap:wrap}
+.contact-item{display:flex;align-items:center;gap:0.75rem;color:rgba(255,255,255,0.7);font-size:0.875rem}
+.contact-item a{color:rgba(255,255,255,0.8);text-decoration:none;transition:color 0.3s}
+.contact-item a:hover{color:#fff}
+.contact-icon{width:36px;height:36px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+
+/* Footer */
+footer{background:var(--text);border-top:1px solid rgba(255,255,255,0.08);padding:1.5rem 2.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem}
+footer p{font-size:0.8rem;color:rgba(255,255,255,0.5)}
+footer a{color:var(--accent2);text-decoration:none;font-size:0.8rem}
+.footer-links{display:flex;gap:1.5rem}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+.reveal-delay-4{transition-delay:0.4s}
+.reveal-delay-5{transition-delay:0.5s}
+
+/* Mobile nav */
+@media(max-width:768px){
+  nav{padding:1rem 1.25rem}
+  .nav-links{display:none;position:fixed;top:60px;left:0;right:0;background:rgba(250,247,242,0.98);backdrop-filter:blur(20px);flex-direction:column;align-items:center;gap:1.5rem;padding:2rem;border-bottom:1px solid var(--border);box-shadow:0 8px 30px rgba(26,58,107,0.1)}
+  .nav-links.open{display:flex}
+  .menu-btn{display:flex}
+  .hero-content{grid-template-columns:1fr;gap:3rem}
+  .hero-right{order:-1}
+  .hero{padding:7rem 1.25rem 3rem}
+  .section{padding:4rem 1.25rem}
+  .skills-section{padding:3rem 1.25rem}
+  .website-section{padding:4rem 1.25rem}
+  footer{flex-direction:column;gap:1rem;text-align:center}
+  .cursor,.cursor-ring{display:none}
+  body{cursor:auto}
+  a,button{cursor:pointer}
+}
+@media(max-width:600px){
+  .hero-stats{gap:1.5rem}
+  .cta-btns{flex-direction:column;align-items:center}
+  .website-visual-grid{grid-template-columns:1fr}
+  .skills-compact-grid{grid-template-columns:1fr 1fr}
+}
+
+.proj-card.hidden{display:none}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="logo">Muthu Sivakami<span>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#what-is-website">For Clients</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact" class="nav-cta">Hire Me</a></li>
+  </ul>
+  <button class="menu-btn" id="menuBtn" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg">
+    <div class="hero-grid-line"></div>
+    <div class="hero-orb orb1"></div>
+    <div class="hero-orb orb2"></div>
+    <div class="hero-orb orb3"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Available for Freelance Projects
+      </div>
+      <h1>
+        <span class="h1-line">PHP & Web</span>
+        <span class="h1-line"><em>Developer</em></span>
+        <span class="h1-line">for Business</span>
+      </h1>
+      <p class="hero-sub">I build websites, billing software & ERP systems for local businesses — restaurants, schools, shops, clinics & NGOs. Based in Tamil Nadu, serving clients across India.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-glow">Get Free Quote</a>
+        <a href="#projects" class="btn-ghost">View Projects</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-num">2+</div><div class="hstat-label">Years Exp</div></div>
+        <div class="hstat"><div class="hstat-num">8+</div><div class="hstat-label">Projects Live</div></div>
+        <div class="hstat"><div class="hstat-num">96%</div><div class="hstat-label">BCA Score</div></div>
+        <div class="hstat"><div class="hstat-num">5+</div><div class="hstat-label">Sectors</div></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-img-main">
+        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="ERP Dashboard" loading="lazy">
+      </div>
+      <div class="hero-imgs-row">
+        <div class="hero-img-sm" data-label="Billing System">
+          <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&q=80" alt="Billing" loading="lazy">
+        </div>
+        <div class="hero-img-sm" data-label="Web App">
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80" alt="Web App" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WHAT IS A WEBSITE SECTION ===== -->
+<section class="website-section" id="what-is-website">
+  <div class="website-orb website-orb1"></div>
+  <div class="website-orb website-orb2"></div>
+  <div class="section-inner" style="position:relative;z-index:2;text-align:center">
+    <div class="section-label" style="justify-content:center">For Business Owners</div>
+    <h2 class="section-title" style="color:#fff;margin-bottom:1.5rem">What is a Website<br><em style="background:linear-gradient(135deg,#fff,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent">& Why Do You Need One?</em></h2>
+    <p class="website-intro reveal">A website is your <strong>business's digital address</strong> — open 24 hours a day, 7 days a week. When someone searches for your shop, clinic, school or restaurant online, your website is what they find. It tells them who you are, what you offer, and how to reach you — even while you sleep.</p>
+
+    <div class="website-visual-grid reveal">
+      <div class="wv-card">
+        <span class="wv-icon">🌐</span>
+        <h3>Your Online Shop Window</h3>
+        <p>Think of it like a signboard for the whole internet. Anyone in Tamil Nadu — or anywhere in India — can find your business in seconds on Google, without needing to ask anyone for directions.</p>
+      </div>
+      <div class="wv-card">
+        <span class="wv-icon">📞</span>
+        <h3>Always Available, Never Closed</h3>
+        <p>Your website works when you're sleeping, on holiday, or busy with customers. People can view your services, prices, location, and contact details at any time — even at midnight.</p>
+      </div>
+      <div class="wv-card">
+        <span class="wv-icon">💼</span>
+        <h3>Builds Trust & Looks Professional</h3>
+        <p>Customers trust businesses with websites more than those without. A clean, professional website tells people: "This is a real, reliable business." It helps you win more customers automatically.</p>
+      </div>
+    </div>
+
+    <div class="website-compare reveal">
+      <div class="compare-card compare-no">
+        <div class="compare-label">😓 Without a Website</div>
+        <ul class="compare-list">
+          <li><span class="ic">❌</span> Customers can't find you on Google</li>
+          <li><span class="ic">❌</span> No way to show your work or products</li>
+          <li><span class="ic">❌</span> You lose customers to competitors online</li>
+          <li><span class="ic">❌</span> People don't know if you are open or closed</li>
+          <li><span class="ic">❌</span> Looks less professional than rivals</li>
+        </ul>
+      </div>
+      <div class="compare-card compare-yes">
+        <div class="compare-label">✨ With Your Website</div>
+        <ul class="compare-list">
+          <li><span class="ic">✅</span> Found on Google when people search</li>
+          <li><span class="ic">✅</span> Show photos, prices, and services</li>
+          <li><span class="ic">✅</span> Customers can WhatsApp or call directly</li>
+          <li><span class="ic">✅</span> Works 24/7 even while you sleep</li>
+          <li><span class="ic">✅</span> Looks professional, builds trust instantly</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="website-cta-row reveal">
+      <p>Ready to put your business online? Starting at just ₹5,000</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <a href="https://wa.me/918122857028?text=Hi%20Muthu%2C%20I%20want%20a%20website%20for%20my%20business" style="background:var(--gold);color:#fff;padding:0.85rem 2rem;border-radius:100px;text-decoration:none;font-weight:700;font-size:0.95rem;transition:all 0.3s;box-shadow:0 4px 24px rgba(200,150,12,0.3)">💬 Chat on WhatsApp</a>
+        <a href="#services" style="border:2px solid rgba(255,255,255,0.4);color:#fff;padding:0.85rem 2rem;border-radius:100px;text-decoration:none;font-weight:500;font-size:0.95rem;transition:all 0.3s">See What I Build →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section services-section" id="services">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">What I Build</div>
+      <h2 class="section-title">Solutions for Every Business</h2>
+      <p class="section-sub">From a simple website to a full management system — I deliver exactly what your business needs.</p>
+    </div>
+    <div class="services-grid">
+      <div class="svc-card reveal reveal-delay-1">
+        <div class="svc-glow"></div>
+        <div class="svc-icon-wrap">🏪</div>
+        <h3>Business Websites</h3>
+        <p>Modern, mobile-friendly websites for restaurants, clinics, beauty parlours, dress shops, and any local business.</p>
+        <span class="svc-price">Starting ₹5,000</span>
+      </div>
+      <div class="svc-card reveal reveal-delay-2">
+        <div class="svc-glow"></div>
+        <div class="svc-icon-wrap">🧾</div>
+        <h3>GST Billing & POS</h3>
+        <p>Complete billing software with GST compliance, invoice generation, stock tracking, and sales reports for retail shops.</p>
+        <span class="svc-price">Custom Quote</span>
+      </div>
+      <div class="svc-card reveal reveal-delay-3">
+        <div class="svc-glow"></div>
+        <div class="svc-icon-wrap">🏫</div>
+        <h3>School Management</h3>
+        <p>Student enrollment, fee collection, attendance tracking, result management, and admin dashboards for schools & colleges.</p>
+        <span class="svc-price">Custom Quote</span>
+      </div>
+      <div class="svc-card reveal reveal-delay-4">
+        <div class="svc-glow"></div>
+        <div class="svc-icon-wrap">📦</div>
+        <h3>Inventory & ERP</h3>
+        <p>Full ERP with purchase, sales, inventory, accounts and reporting — for food mills, manufacturers, and distributors.</p>
+        <span class="svc-price">Custom Quote</span>
+      </div>
+      <div class="svc-card reveal reveal-delay-5">
+        <div class="svc-glow"></div>
+        <div class="svc-icon-wrap">💰</div>
+        <h3>NGO & Trust Software</h3>
+        <p>Donation tracking, receipt generation, member management, loan disbursement & financial statements for NGOs & trusts.</p>
+        <span class="svc-price">Custom Quote</span>
+      </div>
+      <div class="svc-card reveal reveal-delay-5">
+        <div class="svc-glow"></div>
+        <div class="svc-icon-wrap">🔧</div>
+        <h3>Custom Web Apps</h3>
+        <p>Any custom requirement — sports event management, HR systems, booking portals, or anything your business needs.</p>
+        <span class="svc-price">Let's Talk</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="section projects-section" id="projects">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">Portfolio</div>
+      <h2 class="section-title">Real Projects, Real Results</h2>
+      <p class="section-sub">8+ live systems built for real businesses across Tamil Nadu. Each project is in active use.</p>
+    </div>
+    <div class="projects-filter reveal">
+      <button class="filter-btn active" data-filter="all">All Projects</button>
+      <button class="filter-btn" data-filter="edu">Education</button>
+      <button class="filter-btn" data-filter="food">Food & Manufacturing</button>
+      <button class="filter-btn" data-filter="ngo">NGO & Finance</button>
+      <button class="filter-btn" data-filter="sports">Sports & Events</button>
+      <button class="filter-btn" data-filter="billing">Billing & POS</button>
+    </div>
+    <div class="projects-grid">
+
+      <div class="proj-card reveal reveal-delay-1" data-category="ngo">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=80" alt="SHG ERP">
+        <div class="proj-body">
+          <span class="proj-sector s-ngo">NGO / Finance</span>
+          <h3>SHG Management — Self Help Group ERP</h3>
+          <p>Loan disbursement, EMI tracking, repayment history, and member account management for a Self Help Group.</p>
+          <div class="proj-tags"><span class="ptag">Yii2</span><span class="ptag">PHP</span><span class="ptag">MySQL</span><span class="ptag">Loans</span></div>
+        </div>
+        <div class="proj-overlay"><a href="#contact" class="view-btn">Build Similar →</a></div>
+      </div>
+
+      <div class="proj-card reveal reveal-delay-2" data-category="food">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&q=80" alt="Food ERP">
+        <div class="proj-body">
+          <span class="proj-sector s-food">Food / Manufacturing</span>
+          <h3>SMR Food Mills — Business ERP</h3>
+          <p>Full ERP covering purchase, sales, inventory, GST billing, vendor management, and profit/loss statements.</p>
+          <div class="proj-tags"><span class="ptag">Yii2</span><span class="ptag">GST</span><span class="ptag">Inventory</span><span class="ptag">Accounts</span></div>
+        </div>
+        <div class="proj-overlay"><a href="#contact" class="view-btn">Build Similar →</a></div>
+      </div>
+
+      <div class="proj-card reveal reveal-delay-3" data-category="edu">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80" alt="College System">
+        <div class="proj-body">
+          <span class="proj-sector s-edu">Education</span>
+          <h3>Zion Safety College — Fees & Student System</h3>
+          <p>Automated fee billing, receipt generation, enrollment workflows, attendance tracking, and financial reports.</p>
+          <div class="proj-tags"><span class="ptag">Yii2</span><span class="ptag">Fee Mgmt</span><span class="ptag">MySQL</span></div>
+        </div>
+        <div class="proj-overlay"><a href="#contact" class="view-btn">Build Similar →</a></div>
+      </div>
+
+      <div class="proj-card reveal reveal-delay-1" data-category="billing">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?w=600&q=80" alt="POS System">
+        <div class="proj-body">
+          <span class="proj-sector s-billing">Retail / POS</span>
+          <h3>Alphonsa School — Store & POS Billing</h3>
+          <p>POS system for books, notes & uniforms with invoice generation, stock alerts, and automated sales analysis.</p>
+          <div class="proj-tags"><span class="ptag">Yii2</span><span class="ptag">POS</span><span class="ptag">Stock</span><span class="ptag">Reports</span></div>
+        </div>
+        <div class="proj-overlay"><a href="#contact" class="view-btn">Build Similar →</a></div>
+      </div>
+
+      <div class="proj-card reveal reveal-delay-2" data-category="ngo">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=600&q=80" alt="Trust Software">
+        <div class="proj-body">
+          <span class="proj-sector s-trust">NGO / Trust</span>
+          <h3>Christ Harvest Mission — Donation Software</h3>
+          <p>Donor tracking, receipt generation, campaign analytics, ledger management, and tax receipt generation.</p>
+          <div class="proj-tags"><span class="ptag">Yii2</span><span class="ptag">Donations</span><span class="ptag">Accounting</span></div>
+        </div>
+        <div class="proj-overlay"><a href="#contact" class="view-btn">Build Similar →</a></div>
+      </div>
+
+      <div class="proj-card reveal reveal-delay-3" data-category="sports">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&q=80" alt="Sports Management">
+        <div class="proj-body">
+          <span class="proj-sector s-sports">Sports / Events</span>
+          <h3>Dakshin Sahodaya — Sports Management</h3>
+          <p>Event scheduling, participant registration, result generation, and AJAX real-time updates for a sports meet.</p>
+          <div class="proj-tags"><span class="ptag">PHP</span><span class="ptag">AJAX</span><span class="ptag">JSON</span><span class="ptag">Events</span></div>
+        </div>
+        <div class="proj-overlay"><a href="#contact" class="view-btn">Build Similar →</a></div>
+      </div>
+
+      <div class="proj-card reveal reveal-delay-2" data-category="edu">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80" alt="CSI College">
+        <div class="proj-body">
+          <span class="proj-sector s-edu">Education</span>
+          <h3>CSI College, Thovalai — Student Management</h3>
+          <p>Complete student info system, fee collection, payment tracking, receipt generation, and responsive admin dashboard.</p>
+          <div class="proj-tags"><span class="ptag">Yii2</span><span class="ptag">jQuery</span><span class="ptag">Bootstrap</span></div>
+        </div>
+        <div class="proj-overlay"><a href="#contact" class="view-btn">Build Similar →</a></div>
+      </div>
+
+      <div class="proj-card reveal reveal-delay-3" data-category="billing">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&q=80" alt="Sindoori Management">
+        <div class="proj-body">
+          <span class="proj-sector s-billing">Management</span>
+          <h3>Sindoori Management Solution</h3>
+          <p>Authentication, data processing, and reporting systems using Core PHP — with AJAX real-time updates and Bootstrap UI.</p>
+          <div class="proj-tags"><span class="ptag">Core PHP</span><span class="ptag">MySQL</span><span class="ptag">Bootstrap</span><span class="ptag">AJAX</span></div>
+        </div>
+        <div class="proj-overlay"><a href="#contact" class="view-btn">Build Similar →</a></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS — COMPACT -->
+<section class="section skills-section" id="skills">
+  <div class="section-inner">
+    <div class="reveal" style="margin-bottom:2rem">
+      <div class="section-label">Tech Stack</div>
+      <h2 class="section-title" style="font-size:clamp(1.6rem,3vw,2.4rem)">My Technical Skills</h2>
+    </div>
+    <div class="skills-compact-grid reveal">
+      <div class="skill-chip-group">
+        <div class="skill-chip-title">Backend</div>
+        <div class="skill-chips">
+          <span class="schip">Core PHP</span>
+          <span class="schip">PHP 8</span>
+          <span class="schip">Yii2</span>
+          <span class="schip">Laravel</span>
+          <span class="schip">REST APIs</span>
+          <span class="schip">MVC</span>
+        </div>
+      </div>
+      <div class="skill-chip-group">
+        <div class="skill-chip-title">Database</div>
+        <div class="skill-chips">
+          <span class="schip">MySQL</span>
+          <span class="schip">Query Optimization</span>
+          <span class="schip">Eloquent ORM</span>
+          <span class="schip">PDO</span>
+        </div>
+      </div>
+      <div class="skill-chip-group">
+        <div class="skill-chip-title">Frontend</div>
+        <div class="skill-chips">
+          <span class="schip">HTML5</span>
+          <span class="schip">CSS3</span>
+          <span class="schip">Bootstrap</span>
+          <span class="schip">JavaScript</span>
+          <span class="schip">jQuery</span>
+          <span class="schip">AJAX</span>
+        </div>
+      </div>
+      <div class="skill-chip-group">
+        <div class="skill-chip-title">Tools</div>
+        <div class="skill-chips">
+          <span class="schip">Git</span>
+          <span class="schip">VS Code</span>
+          <span class="schip">XAMPP</span>
+          <span class="schip">Postman</span>
+        </div>
+      </div>
+    </div>
+    <div class="biz-modules reveal" style="margin-top:1rem">
+      <div class="biz-modules-title">Business Modules I've Built</div>
+      <div class="biz-pills">
+        <span class="biz-pill">GST Billing</span>
+        <span class="biz-pill">Inventory</span>
+        <span class="biz-pill">RBAC Auth</span>
+        <span class="biz-pill">ERP Systems</span>
+        <span class="biz-pill">POS</span>
+        <span class="biz-pill">Fee Management</span>
+        <span class="biz-pill">Loan Tracking</span>
+        <span class="biz-pill">Donations</span>
+        <span class="biz-pill">Reports</span>
+        <span class="biz-pill">Student Mgmt</span>
+        <span class="biz-pill">Payroll</span>
+        <span class="biz-pill">Attendance</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-orb1"></div>
+  <div class="cta-inner reveal">
+    <div class="section-label" style="justify-content:center">Let's Work Together</div>
+    <h2 class="section-title">Ready to Build<br><em style="background:linear-gradient(135deg,#fff,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">Your Website?</em></h2>
+    <p>Running a shop, restaurant, school, clinic, or any business? I'll build exactly what you need — at a fair, honest price. Free consultation, no obligation.</p>
+    <div class="cta-btns">
+      <a href="https://wa.me/918122857028?text=Hi%20Muthu%2C%20I%20need%20a%20website%20for%20my%20business" style="background:#fff;color:var(--accent);padding:0.85rem 2rem;border-radius:100px;text-decoration:none;font-weight:700;font-size:0.9rem;transition:all 0.3s;box-shadow:0 4px 20px rgba(0,0,0,0.15)">💬 WhatsApp Now</a>
+      <a href="mailto:muthusivakami2001@gmail.com" style="border:2px solid rgba(255,255,255,0.5);color:#fff;padding:0.85rem 2rem;border-radius:100px;text-decoration:none;font-weight:500;font-size:0.9rem;transition:all 0.3s">📧 Send Email</a>
+    </div>
+    <div class="cta-contact">
+      <div class="contact-item"><div class="contact-icon">📱</div><a href="tel:+918122857028">+91 81228 57028</a></div>
+      <div class="contact-item"><div class="contact-icon">✉️</div><a href="mailto:muthusivakami2001@gmail.com">muthusivakami2001@gmail.com</a></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Muthu Sivakami — PHP Developer, Thuckalay, Tamil Nadu</p>
+  <div class="footer-links">
+    <a href="mailto:muthusivakami2001@gmail.com">Email</a>
+    <a href="https://wa.me/918122857028">WhatsApp</a>
+  </div>
+</footer>
+
+<script>
+// Custom cursor
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx-5+'px';cursor.style.top=my-5+'px'});
+setInterval(()=>{rx+=(mx-rx-18)*0.15;ry+=(my-ry-18)*0.15;ring.style.left=rx+'px';ring.style.top=ry+'px'},16);
+document.addEventListener('mousedown',()=>cursor.classList.add('click'));
+document.addEventListener('mouseup',()=>cursor.classList.remove('click'));
+
+// Navbar scroll
+const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>{navbar.classList.toggle('scrolled',window.scrollY>50)});
+
+// Mobile menu
+const menuBtn=document.getElementById('menuBtn'),navLinks=document.getElementById('navLinks');
+menuBtn.addEventListener('click',()=>navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('open')));
+
+// Scroll reveal
+const reveals=document.querySelectorAll('.reveal');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible')}});
+},{threshold:0.1});
+reveals.forEach(el=>observer.observe(el));
+
+// Project filter
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    const filter=this.dataset.filter;
+    document.querySelectorAll('.proj-card').forEach(card=>{
+      if(filter==='all'||card.dataset.category===filter){
+        card.classList.remove('hidden');
+      }else{
+        card.classList.add('hidden');
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
